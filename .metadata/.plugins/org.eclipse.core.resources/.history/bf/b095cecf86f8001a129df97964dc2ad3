@@ -1,0 +1,127 @@
+package com.semanticsquare.collections;
+
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+
+public class ListDemo {	
+	
+	private static List<Integer> arrayListDemo() {
+		// Basic operations
+		List<Integer> list1 = new ArrayList<>();
+		list1.add(1);
+		list1.add(2);
+		list1.add(3);
+		list1.add(3); // ArrayList can store duplicates
+		list1.add(null); // ArrayList can store null values
+		System.out.println("list1: " + list1);
+		
+		list1.remove(3); //  removes at a particular index.
+		System.out.println("list1: " + list1);
+		list1.remove(3);
+		System.out.println("list1: " + list1);
+		
+		list1.add(0, 10);
+		System.out.println("list1: add 10 at 0th position " + list1);
+		list1.set(0, 9); // sets 9 at 0th position
+		System.out.println("list1: " + list1);
+				
+		// Bulk Operations
+		Collection<Integer> list2 = new ArrayList<>();
+		list2.add(9);
+		list2.add(3);
+		
+		list1.removeAll(list2); // it removes 3,9 from list1
+		System.out.println("list1: " + list1);
+		
+		list2.add(1); // at this point, list 2 has 9,3,1 and list1 has 1,2
+		
+		list1.retainAll(list2); // retains the elements present in list2 and removes the rest from list1.
+		System.out.println("list1: using reatianAll method " + list1);
+		
+		list1.addAll(list2); // add list2 elements to list1
+		System.out.println("list1: " + list1);
+		
+		// set(2,8) -> sets the value 8 at index position 2 and returns the previous value which was at position 2 which is 3, in this case.
+		System.out.println("list1.set(2, 8): " + list1.set(2, 8)); 
+		
+		
+		// Search
+		System.out.println("########################## Search ########################################");
+		System.out.println("list1.contains(1): " + list1.contains(1)); // return boolean if it contains value
+		System.out.println("list1.indexOf(1): " + list1.indexOf(1)); // returns index position of the first occurance
+		System.out.println("list1.lastIndexOf(1): " + list1.lastIndexOf(1)); // returns index position of the first occurance from last	
+		System.out.println("list1: " + list1);
+		
+		
+		// Range-view: subList (new list is backed by original)
+		System.out.println("########################## Range - view ########################################");
+		List<Integer> list3 = list1.subList(2, 3); // element at 2 is inclusive and element at 3 is exclusive so it returns only one element, in this case.
+		System.out.println("list3: " + list3);
+		/* Any changes made to sublist(list3) are also reflected in the main list(list1) and vice versa is also true */
+		list3.set(0, 6);
+		System.out.println("list1: " + list1);
+		list3.add(0, 7);
+		System.out.println("list1: " + list1);
+		list1.set(2, 8);
+		System.out.println("list3: " + list3);
+		/* When we make any structural changes in the original array like adding a element, then when accessing the sublist(list3) 
+		 * will throw an exception called ConcurrentModificationException. But while replacing elements there is no problem. Only when structure
+		 * gets changed then it is an issue.
+		 * To see this in action uncomment the below 2 lines of code.
+		 * */
+		//list1.add(0, 8); 
+		//System.out.println("list3: " + list3);
+		System.out.println("list1: " + list1);
+		/*
+		 * We cannot remove an item or an element from a forEach statement. It will throw an exception `ConcurrentModificationException`.
+		 * If we want to remove an element in a loop then we need to use an Iterator method but not forEach.		
+		 * To view this in action uncomment the below foEach loop
+		 * */
+		/*
+		for (int element : list1) {
+			System.out.println("element: " + element);
+			
+			// Generates ConcurrentModificationException
+			if (element == 9) {
+				list1.remove(Integer.valueOf(element)); // valueOf is used due to its caching
+			}
+		}		
+		*/
+		return list1;
+		
+	}
+	
+	private static void iteratorDemo(List<Integer> list1) {
+		System.out.println("\nInside iteratorDemo ... ");
+		
+		// To iterate over the list we need to invoke the method iterator() in ArrayList.
+		Iterator<Integer> iterator = list1.iterator();  
+		while (iterator.hasNext()) {
+			int element = iterator.next();
+			System.out.println("element: " + element);
+			
+			if (element == 9) {
+				iterator.remove();
+//				iterator.forEachRemaining(Filter::add);	
+			}
+		}
+		System.out.println("list1: " + list1);
+		
+		//list1.forEach(System.out::println);
+		//list1.forEach(Filter::filter);
+		//list1.forEach(new Filter());	// requires implementing Consumer	
+		
+		// forEachRemaining:
+		// http://mail.openjdk.java.net/pipermail/lambda-dev/2013-June/010221.html
+		// A/C Brian Goetz, he doesn't see much use of this method			
+	}
+	
+	public static void main(String[] args) {
+		List<Integer> list1 = arrayListDemo();	
+		iteratorDemo(list1);
+	}
+}

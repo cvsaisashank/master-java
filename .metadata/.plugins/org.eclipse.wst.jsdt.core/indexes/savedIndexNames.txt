@@ -1,0 +1,5 @@
+INDEX VERSION 1.4+/Users/chittoori/Desktop/Projects/master-java/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+2032683943.index
+4101426745.index
+1736788928.index
+1781750987.index

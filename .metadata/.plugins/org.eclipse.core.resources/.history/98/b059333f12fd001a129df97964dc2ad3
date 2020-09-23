@@ -1,0 +1,107 @@
+package com.semanticsquare.collections;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+/* Notes:
+ * Q) What is Arrays class?
+ * A) It is a general utility class which helps in manipulating an array thru its various methods. It has methods like, which will help in
+ * converting an Array nto an ArrayList, sort an array, search for an element in an array, make a copy of an array , compareTo arrays to cehck
+ * if they have identical contents, etc. From Java 8, several methods which supports parallelized operations were added to this class. 
+ * Most of the Arrays class methods have overloaded methods which supports different primitive types and Object type.
+ * */
+public class ArraysDemo {
+	
+	private static void sequential() {
+		String[] strArray = new String[]{"Raj", "Anita"};
+		System.out.println("strArray: " + strArray); // Output: [Ljava.lang.String;@626b2d4a
+		/* Below will return a String representation of the elements by concatenating all of the elements with a `,`and enclose it with []*/
+		System.out.println("strArray: " + Arrays.toString(strArray)); // Output: [Raj, Anita]
+		/*
+		 * Q) WHat asList() does?
+		 * A) It takes an input array and it returns a List view of the array. 
+		 * But the thing here is this new ArrayList created will be of fixed size. Meaning we cannot add() or remove() an element.
+		 * asList() is most commonly used method.signature of asList will be something like List<T> asList(T...)
+		 * */
+		List<String> strings = Arrays.asList(strArray); // fixed-size ArrayList is created
+		System.out.println("strings: " + strings);	// Output: 	[Raj, Anita]
+		/*As the new ArrayList created will be of fixed size. Meaning we cannot perform the below commented statements. */
+		//strings.remove(0);
+		//strings.add("a");
+		/* We can update the value on the list and this would reflect on the original array too.*/
+		strings.set(0, "john");
+		System.out.println("Updated Array: " + Arrays.toString(strArray)); // Output: [john, Anita]
+		
+		/* To create a modifiable ArrayList from an Array we have do it like below: */
+		strings = new ArrayList(Arrays.asList(strArray));
+				
+		/* As asList() methods accepts varargs, instead of passing an array, we can also pass inputs with a comma separated like below: */
+		strings = Arrays.asList("Raj", "Anita");
+		
+		/* When we want to create an ArrayList of fixed size when we don't have an input Array, below is the way we can do that */
+		List<String> fixedList = Arrays.asList(new String[3]);
+		
+		/* Below will not work because if we recall from autoboxing that arrays are not auto-boxeable */
+		//List<Integer> fixedList2 = Arrays.asList(new int[2]);
+		
+		/* Below will work while the above will not work */
+		List<int[]> fixedList2 = Arrays.asList(new int[2]); 
+		System.out.println("fixedList2.size: " + fixedList2.size()); // Output: 1
+		
+		
+		/* Sorting signature: void sort(Object[]) - Uses Merge-sort with natural ordering
+		* Partially sorted array: far fewer than nlog(n) comparisons 
+		* Almost sorted array: approx. n comparisons, where n is array size
+		* 
+		* */
+		Arrays.sort(strArray);  
+		System.out.println("Sorted output on Array " + Arrays.toString(strArray)); // Output: [Anita, john]
+		// Additional Comments: Well-suited for merging 2 or more sorted arrays
+		//                      Concatenate the arrays & sort the resulting array!!
+		
+		// Sorting: void sort(int[]) - Uses quick sort
+		int[] iArray = {23, 4, 59};
+		Arrays.sort(iArray);
+		System.out.println("Sorted iArray: " + Arrays.toString(iArray));	
+		
+		// void sort(T[] a, Comparator<? super T> c)
+		
+		// Binary Search: int binarySearch(int[], int); 
+		//                returns index if element found
+		//                otherwise returns -(insertion point) - 1
+		//                input array must be sorted. Otherwise, behavior is undefined
+		System.out.println("index returned by binary search: " + Arrays.binarySearch(new int[] {4,  23, 59}, 5));
+		
+		int[] newArray = Arrays.copyOf(iArray, 6);
+		System.out.println("newArray: " + Arrays.toString(newArray));
+		
+		int[] newArray1 = new int[6];
+		System.arraycopy(iArray, 0, newArray1, 0, iArray.length);
+		System.out.println("newArray1: " + Arrays.toString(newArray1));
+		
+		Arrays.fill(newArray, 13);
+		System.out.println("Fill with 13: " + Arrays.toString(newArray));
+		
+		System.out.println("Equals? " + Arrays.equals(iArray, newArray));
+		
+		// Arrays.deepEquals(Object[], Object[]);
+		//  Returns true if arrays are deeply equal to one another. 
+		//  Appropriate for nested arrays
+		//int[][][] deepArray1 = { { {1, 2, 3}, {4, 5, 6} } };
+		//int[][][] deepArray2 = { { {1, 2, 3}, {4, 5, 6} } };
+		//int[][] deepArray1 = {{1, 2, 3}};
+		//int[][] deepArray2 = {{1, 2, 3}};
+		//int[] deepArray1 = {1, 2, 3}; // Covariance: Does not work as int[] is not a subtype of Object[]
+		//int[] deepArray2 = {1, 2, 3};
+		//System.out.println("Deep Array Equals? " + Arrays.deepEquals(deepArray1, deepArray2));
+		
+		Object[] objArray = new int[][][] { { {1, 2, 3}}};
+		int[][] ia = (int[][])objArray[0];
+		System.out.println(ia[0][2]);
+	}
+		
+	public static void main(String[] args) {
+		sequential();
+	}	
+	
+}

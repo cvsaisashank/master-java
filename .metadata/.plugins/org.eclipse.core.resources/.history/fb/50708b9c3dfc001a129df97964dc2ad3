@@ -1,0 +1,28 @@
+package com.semanticsquare.collections;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/*Notes
+ * Q) What is LinkedHashSet
+ * */
+public class LinkedHashSetDemo {
+	public static void linkedHashSetDemo() {
+		Set<String> hashSet = new HashSet<>();
+		hashSet.add("Raj");
+		hashSet.add("John");
+		hashSet.add("Anita");
+		System.out.println("hashSet: " + hashSet);
+		
+		Set<String> linkedHashSet = new LinkedHashSet<>();
+		linkedHashSet.add("Raj");
+		linkedHashSet.add("John");
+		linkedHashSet.add("Anita");
+		System.out.println("linkedHashSet: " + linkedHashSet);
+	}
+	
+	public static void main(String[] args) {
+		linkedHashSetDemo();
+	}	
+}

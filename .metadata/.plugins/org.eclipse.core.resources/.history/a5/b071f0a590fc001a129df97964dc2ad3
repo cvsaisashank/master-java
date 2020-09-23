@@ -1,0 +1,84 @@
+package com.semanticsquare.collections;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/* Notes:
+ * O(1) for put, get and remove()
+ * Insertion order is not preserved
+ * Permits null values and one null key
+ * Not synchronized unlike HashTable. HashTable is legacy and is not recommended to use it directly. Instead use HashMap as it extends HashTable.
+ * */
+public class HashMapDemo {
+	
+	private static void hashMapDemo() {
+		System.out.println("\n\nInside hashMapDemo ...");
+		/*Map<KeyType, ValueType> map1 = new HashMap<>().
+		 *  If we do not pass <KeyType, ValueType> to the HashMap<> it will be automatically inferred by the compiler */
+		Map<String, Integer> map1 = new HashMap<>();
+		map1.put("John", 25);
+		map1.put("Raj", 29);
+		map1.put("Anita", null);
+		
+		System.out.println(map1); //output: {John=25, Raj=29, Anita=null}
+		
+		map1.put("Anita", 23);
+		System.out.println(map1); //Output: {John=25, Raj=29, Anita=23}
+		
+		System.out.println("Contains John? " + map1.containsKey("John")); //Output: true
+		System.out.println("John's age: " + map1.get("John")); //Output: 25
+		
+		System.out.println("############### Iterating using keySet #########################");
+		/* keySet() returns the collection of all the keys in the HashMap.*/
+		Set<String> names = map1.keySet();
+		for (String name : names) {
+			System.out.println("Name: " + name + ", Age: " + map1.get(name)); // First iteration Output: Name: John, Age: 25
+		}
+		
+		System.out.println("############## Start - Iterating using entrySet - better than keySet iteration #######################");
+		/* Q) Why Iterating using entrySet is faster than Iterating using keySet
+		 * A) Iterating using keySet is also very fast.But only in cases where multiple keys are stored within the same bucket then it will
+		 * perform a linear search in the bucket to get the value of the key.
+		 * */
+			
+		/* When entrySet() is called it will return the type Set<instance of Entry interface and 
+		 * need to pass the KeyType and ValueType to it> */
+		Set<Map.Entry<String, Integer>> mappings = map1.entrySet();
+		for (Map.Entry<String, Integer> mapping : mappings) {
+			System.out.println("Name: " + mapping.getKey() + ", Age: " + mapping.getValue()); // First iteration Output: Name: John, Age: 25
+		}
+		System.out.println("############## End - Iterating using entrySet - better than keySet iteration #######################");
+		
+		/*names Set collection is backed but by the origin HashMap. Meaning any change to the set will also effect the map.*/
+		names.remove("Anita");
+		System.out.println(map1); //Output: {John=25, Raj=29}
+		
+		Map<String, Map<String, Object>> userProfile = new HashMap<>();
+		
+		Map<String, Object> profile = new HashMap<>();
+		profile.put("age", 25);
+		profile.put("dept", "CS");
+		profile.put("city", "New York");
+		
+		userProfile.put("John", profile);
+		
+		profile = new HashMap<>();
+		profile.put("age", 29);
+		profile.put("dept", "CS");
+		profile.put("city", "New York");
+		
+		userProfile.put("Raj", profile);
+		
+		System.out.println("userProfile: " + userProfile); //Output: 
+		
+		Map<String, Object> profile1 = userProfile.get("John");
+		int age = (Integer) profile1.get("age");
+		System.out.println("Age: " + age); //Output: 
+		// Exercise: Try using second constructor, putAll, clear, values, and other methods
+	}
+		
+	public static void main(String[] args) {
+		hashMapDemo();		
+	}	
+}

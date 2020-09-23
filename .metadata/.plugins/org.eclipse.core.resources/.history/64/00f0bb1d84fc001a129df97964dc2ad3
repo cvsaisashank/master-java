@@ -1,0 +1,60 @@
+package com.semanticsquare.collections;
+
+import java.util.NavigableSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+/*
+ * NavigableSet which is a sub interface of SortedSet. It supports all the methods in SortedSet and additionally it supports methods that returns the closest matches for given search
+ * targets.
+ * */
+public class NavigableTreeSetDemo {
+	
+	private static void navigableTreeSetDemo() {
+		NavigableSet<Integer> set = new TreeSet<>();
+		set.add(5);
+		set.add(23);
+		set.add(74);
+		set.add(89);
+		/* lower returns nearest lower value than that is passed */
+		System.out.println("lower: " + set.lower(74)); // output: 23
+		/* floor returns which is less than or equal to the value that is passed */
+		System.out.println("floor: " + set.floor(74)); // output: 74
+		/* ceiling returns the lowest number which is greater than or equal to the value that is passed */
+		System.out.println("ceiling: " + set.ceiling(74)); // output: 74 
+		/* higher returns the higher value which is greater than the value that is passed */
+		System.out.println("higher: " + set.higher(74));// output: 89
+		
+		/*first() method returns the first element */
+		System.out.println("first: " + set.first()); // output: 5
+		/*last() method returns the first element */
+		System.out.println("last: " + set.last());// output: 89
+		
+		System.out.println("set: " + set);// output: []
+		
+		NavigableSet<Integer> descendingSet = set.descendingSet(); // output: 
+		System.out.println("descendingSet: " + descendingSet);// output: 
+		
+		NavigableSet<Integer> headSet = set.headSet(74, true);// output: 
+		System.out.println("headSet: " + headSet);// output: 
+		
+		headSet.add(6);
+		System.out.println("headSet: " + headSet);// output: 
+		System.out.println("set: " + set);// output: 
+		headSet.add(4);
+		//headSet.add(75); // throws IllegalArgumentException
+		System.out.println("set: " + set);// output: 
+		
+		SortedSet<Integer> subSet = set.subSet(5, 74);
+		//subSet.add(2); // throws IllegalArgumentException
+		
+		// Adding element in backed set (original set) and 
+		// see it getting reflected in subSet
+		set.add(25);
+		System.out.println("subSet: " + subSet);// output: 
+	}
+	
+	public static void main(String[] args) {
+		navigableTreeSetDemo();
+	}	
+}

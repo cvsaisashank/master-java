@@ -1,0 +1,99 @@
+package com.semanticsquare.collections;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+public class CollectionsDemo {
+	
+	public static void main(String[] args) {
+	
+		/* addAll
+		 * addAll signature - boolean addAll(Collection<? super T> c, T... elements);
+		 * The first parameter is a collection and the second parameter is an array and returns a boolean.
+		 * Collections.addAll(list, array); is faster than list.addAll(Arrays.asList(array)). Both does the same job.
+		 * 
+		 * */
+		List<String> list = new ArrayList<>();
+		list.add("Raj");
+		list.add("John");
+		list.add("John");
+		
+		String[] array = {"Anita"};
+		
+		Collections.addAll(list, array);
+		
+		System.out.println("list after addAll() method : " + list); // Output: [Raj, John, John, Anita]
+		
+		/*
+		 * sort:
+		 * Signature: static <T extends Comparable<? super T>> void sort(List<T> list). It does natural sorting.
+		 * */
+		Collections.sort(list);
+		
+		System.out.println("Sorted list: " + list); // Output: [Anita, John, John, Raj]
+		
+		/* Collections.binarySearch:
+		 * Signature: <T> int binarySearch(List<? extends Comparable<? super T>> list, T key)
+		   - To perform binary search , list needs to be sorted. Time complexity is O(log(n)). 
+		   - If not sorted results are undefined. Might perform an inefficient linear search!!.
+		   - For Sets: binarySearch() method is not applicable. HashSet can look up in O(1). TreeSet can do the loop up in O(log(n)), i.e., same efficiency as binary search for TreeSet.
+		   - Note: List.contains is O(n) is slower than the Collections.binarySearch(list, "John")) which is O(log(n)).
+		   - binarySearch can also be performed using a Comparator and the signature is like below:
+		      <T> int binarySearch(List<? extends T> list, T key, Comparator<? super T> c)
+		*/
+		System.out.println("Is John There? : " + Collections.binarySearch(list, "John")); // Output: 1
+		   
+		/*reverse:
+		 * It will just reverse the elements in the list
+		 * */
+		Collections.reverse(list);
+		System.out.println("Reverse list: " + list); // Output: [Raj, John, John, Anita]
+		
+		/* swap:
+		 * It just swaps the element indexes in a list
+		 * */
+		Collections.swap(list, 0, 3);
+		System.out.println("After swapping: " + list); // Output: [Anita, John, John, Raj]
+		
+		/* frequency:
+		 * It tells how many times an element it appears in the list.
+		 * */
+		System.out.println("# John frequency: " + Collections.frequency(list, "John")); // Output: 2
+		
+		/* Shuffle:
+		 * It simply shuffles the list
+		 * */
+		Collections.shuffle(list);
+		System.out.println("Shuffled list: " + list); // Output: [Anita, John, Raj, John]
+		
+		/* max:
+		 * It returns the maximum element. 
+		 * It determines by performing natural ordering
+		 * */
+		System.out.println("Max: " + Collections.max(list)); // 
+		System.out.println("Min: " + Collections.min(list));
+		
+		
+		// Singleton ~ <T> Set<T> singleton(T o)
+		//             Returns an immutable set containing only the specified object
+		// Others: <T> List<T> singletonList(T o) & <K,V> Map<K,V> singletonMap(K key, V value)
+		list.removeAll(Collections.singleton("John"));
+		
+		// Unmodifiable View ~ to provide clients with read-only access to internal collections
+		Collection<String> unmodifiable = Collections.unmodifiableCollection(list);
+		System.out.println("unmodifiable: " + unmodifiable);
+		System.out.println("Is Anita there?: " + unmodifiable.contains("Anita"));
+		//unmodifiable.add("John");
+		list.add("John");
+		System.out.println("unmodifiable 2: " + unmodifiable);
+		
+		// Check out other methods in the API
+		//   ~ Methods starting with keyword empty like emptyList will be briefly discussed in 
+		//      a subsequent lesson when discussing an item from Effective Java
+		//   ~ Check back on methods starting with name "checked" as they are generics related
+		//   ~ Synchronized methods will be reviewed in Concurrency chapter
+	}
+	
+}

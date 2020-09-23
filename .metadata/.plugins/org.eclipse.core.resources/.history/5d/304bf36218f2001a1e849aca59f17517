@@ -1,0 +1,11 @@
+package com.learning.basicstest;
+
+import java.util.ArrayList;
+
+import com.learning.basics.HelloWorld;
+
+public class BasicsDemoTest {
+    public static void main(String[] args) {
+        new HelloWorld().foo();
+    }
+}

@@ -1,0 +1,7 @@
+package com.semanticsquare.exceptions;
+
+// By Extending checked exception we are forced to handle this exception `APIFormatChangeException` in the calling method.
+// 
+public class APIFormatChangeException extends Exception{
+
+}

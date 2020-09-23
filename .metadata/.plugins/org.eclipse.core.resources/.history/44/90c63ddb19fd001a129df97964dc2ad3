@@ -1,0 +1,181 @@
+package com.semanticsquare.collections;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.IntBinaryOperator;
+import java.util.function.IntUnaryOperator;
+/* Notes:
+ * Q) What is Arrays class?
+ * A) It is a general utility class which helps in manipulating an array thru its various methods. It has methods like, which will help in
+ * converting an Array nto an ArrayList, sort an array, search for an element in an array, make a copy of an array , compareTo arrays to cehck
+ * if they have identical contents, etc. From Java 8, several methods which supports parallelized operations were added to this class. 
+ * Most of the Arrays class methods have overloaded methods which supports different primitive types and Object type.
+ * */
+public class ArraysDemo {
+	
+	private static void sequential() {
+		String[] strArray = new String[]{"Raj", "Anita"};
+		System.out.println("strArray: " + strArray); // Output: [Ljava.lang.String;@626b2d4a
+		/* Below will return a String representation of the elements by concatenating all of the elements with a `,`and enclose it with []*/
+		System.out.println("strArray: " + Arrays.toString(strArray)); // Output: [Raj, Anita]
+		/* asList:
+		 * Q) WHat asList() does?
+		 * A) It takes an input array and it returns a List view of the array. 
+		 * But the thing here is this new ArrayList created will be of fixed size. Meaning we cannot add() or remove() an element.
+		 * asList() is most commonly used method.signature of asList will be something like List<T> asList(T...)
+		 * */
+		List<String> strings = Arrays.asList(strArray); // fixed-size ArrayList is created
+		System.out.println("strings: " + strings);	// Output: 	[Raj, Anita]
+		/*As the new ArrayList created will be of fixed size. Meaning we cannot perform the below commented statements. */
+		//strings.remove(0);
+		//strings.add("a");
+		/* We can update the value on the list and this would reflect on the original array too.*/
+		strings.set(0, "john");
+		System.out.println("Updated Array: " + Arrays.toString(strArray)); // Output: [john, Anita]
+		
+		/* To create a modifiable ArrayList from an Array we have do it like below: */
+		strings = new ArrayList(Arrays.asList(strArray));
+				
+		/* As asList() methods accepts varargs, instead of passing an array, we can also pass inputs with a comma separated like below: */
+		strings = Arrays.asList("Raj", "Anita");
+		
+		/* When we want to create an ArrayList of fixed size when we don't have an input Array, below is the way we can do that */
+		List<String> fixedList = Arrays.asList(new String[3]);
+		
+		/* Below will not work because if we recall from autoboxing that arrays are not auto-boxeable */
+		//List<Integer> fixedList2 = Arrays.asList(new int[2]);
+		
+		/* Below will work while the above will not work */
+		List<int[]> fixedList2 = Arrays.asList(new int[2]); 
+		System.out.println("fixedList2.size: " + fixedList2.size()); // Output: 1
+		
+		
+		/* Sort:
+		 * Sorting signature: void sort(Object[]) - Uses Merge-sort with natural ordering
+		* Partially sorted array: far fewer than nlog(n) comparisons 
+		* Almost sorted array: approx. n comparisons, where n is array size
+		* Additional Comments: Well-suited for merging 2 or more sorted arrays
+		*                      Concatenate the arrays & sort the resulting array!!
+		* */
+		Arrays.sort(strArray);  
+		System.out.println("Sorted output on Array " + Arrays.toString(strArray)); // Output: [Anita, john]
+		
+		/* Below is another version of sort.
+		 * If it is an array of primitives sort methods performs a quick sort.
+		 * Sorting: void sort(int[]) - Uses quick sort
+		 * */ 
+		int[] iArray = {23, 4, 59};
+		Arrays.sort(iArray);
+		System.out.println("Sorted iArray: " + Arrays.toString(iArray)); // Output: [4, 23, 59]	
+		
+		/* Below is another version of sort which takes a comparator while the sort versions use comparable which is natural ordering.
+		 * void sort(T[] a, Comparator<? super T> c)
+		*/
+		
+		/* Binary Search: int binarySearch(int[], int); 
+	               		  returns index if element found
+		                  otherwise returns -(insertion point) - 1
+		                  input array must be sorted. Otherwise, behavior is undefined
+		   Q) Why the below return -2 but not -1?
+		   A) Because as the element is not found it first returns -1 and if the element was there it would get added at the first(1) index
+		   position so another -1 gets added. So the total is -2. 
+		*/
+		System.out.println("index returned by binary search: " + Arrays.binarySearch(new int[] {4, 23, 59}, 5)); // Output: -2 - because
+		
+		/* Copy:
+		 * It will return a copy of this array. 
+		 * If the length is specified for the new array and if the 
+		   length is greater than the input array then the default values will be inserted.
+		 * */
+		int[] newArray = Arrays.copyOf(iArray, 6);
+		System.out.println("newArray copy: " + Arrays.toString(newArray)); // Output: [4, 23, 59, 0, 0, 0]
+		
+		int[] newArray1 = new int[6];
+		/*System.arraycopy signature:
+		arraycopy(sourceArray, positionFromWhereWeWantTostartCopyingFromSourceArray, destinationArray,positionFromWhereWeWantTostartCopyingFromDestinationArray, numberOfElementsThatNeedsToBeCopied )
+		 * */
+		System.arraycopy(iArray, 0, newArray1, 0, iArray.length);
+		System.out.println("newArray1: " + Arrays.toString(newArray1)); // Output: [4, 23, 59, 0, 0, 0]
+		
+		/*Fill:
+		 * It will fill all the elements in an array with the value given. A good way to initialize an array with only one value
+		 * */
+		Arrays.fill(newArray, 13); 
+		System.out.println("Fill with 13: " + Arrays.toString(newArray));// Output: [13, 13, 13, 13, 13, 13]
+		
+		/* Equals:
+		 * It will take both the arrays and will return a true if they are equal.
+		 * */
+		System.out.println("Equals? " + Arrays.equals(iArray, newArray)); // Output: false
+		
+		/* Arrays.deepEquals(Object[], Object[]);
+		 * This method will check even on the nested arrays.Appropriate for nested arrays
+		 * Returns true if arrays are deeply equal to one another. 
+		 * */
+		int[][][] deepArray1 = { { {1, 2, 3}, {4, 5, 6} } };
+		int[][][] deepArray2 = { { {1, 2, 3}, {4, 5, 6} } };
+		//int[][] deepArray1 = {{1, 2, 3}};
+		//int[][] deepArray2 = {{1, 2, 3}};
+		/*
+		 * As below is just an Object but not an Array of Object it will not work. Had it been like int[][] then it is fine.
+		 * Q) What is covariance?
+		 * If there are two types, say one of them is Object and the other one is an Integer and we know that Integer is a sub type of an Object.
+		 * If this is the case then Integer[] is a sub type of Object[]. This is what covariance means.
+		 * */
+		//int[] deepArray1 = {1, 2, 3}; // Covariance: Does not work as int[] is not a subtype of Object[]
+		//int[] deepArray2 = {1, 2, 3};
+		System.out.println("Deep Array Equals? " + Arrays.deepEquals(deepArray1, deepArray2)); // Output: true
+		
+		Object[] objArray = new int[][][] { { {1, 2, 3}}};
+		int[][] ia = (int[][])objArray[0];
+		System.out.println(ia[0][2]);
+	}
+	
+	// Java 8 ~ Parallelized Operations
+		private static void parallel() {
+			System.out.println("####################### Inside Parallel Operations ################################");
+			// For large arrays on multi-core. Min size atleast 1 >> 13 = 8192
+			int[] iArray = {23, 4, 59};
+			Arrays.parallelSort(iArray); 
+			System.out.println("iArray parallel sort: " +  Arrays.toString(iArray));
+			
+			IntBinaryOperatorImpl IntBinaryOperatorImpl = new IntBinaryOperatorImpl();
+			Arrays.parallelPrefix(iArray, IntBinaryOperatorImpl);
+			System.out.println("Parallel Prefix: " + Arrays.toString(iArray));
+			
+			IntUnaryOperatorImpl intUnaryOperatorImpl = new IntUnaryOperatorImpl();
+			intUnaryOperatorImpl.setArray(iArray);
+			Arrays.parallelSetAll(iArray, intUnaryOperatorImpl);
+			System.out.println("Parallel Set All: " + Arrays.toString(iArray));
+		}
+		
+	public static void main(String[] args) {
+		sequential();
+		parallel();
+	}		
+}
+
+class IntBinaryOperatorImpl implements IntBinaryOperator {
+	@Override
+	public int applyAsInt(int left, int right) {
+		return left + right;
+	}	
+}
+
+class IntUnaryOperatorImpl implements IntUnaryOperator {
+	int[] iArray;
+	
+	public void setArray(int[] iArray) {
+		this.iArray = iArray;
+	}
+
+	@Override
+	public int applyAsInt(int i) {
+		if (iArray != null) {
+			return iArray[i]+5;
+		} else {
+			return i;
+		}		
+	}
+}

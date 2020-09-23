@@ -1,0 +1,136 @@
+package com.semanticsquare.collections;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class SetDemo {
+	/* Notes - HashSet - 
+	 * Q) What is HashSet
+	 * 1. hash table implementation of Set interface. It internally uses HashMap which stores key value pairs.
+	 * 2. It permits one null element.
+	 * Q) What are its typical usecase usages?
+	 * 1. Rapid lookup, insertion and deletion. It does in O(1).
+	 * 2. Insertion order is not important.
+	 * 3. Better for removeAll() & retainAll()
+	 * */
+	private static void hashSetDemo() {
+		Set<String> set1 = new HashSet<>();
+		set1.add("a");
+		set1.add("b");
+		set1.add("a");
+						
+		System.out.println("set1: " +  set1); // output [a,b]
+		
+		Book book1 = new Book("Walden", "Henry Thoreau", 1854);
+		Book book2 = new Book("Walden", "Henry Thoreau", 1854);
+		Set<Book> set2 = new HashSet<>();
+		set2.add(book1);
+		set2.add(book2);
+		System.out.println("set2: " +  set2);
+	}
+	
+	public static void main(String[] args) {
+		hashSetDemo();
+	}	
+	
+}
+
+class Book {
+	private String title;
+	private String author;
+	private int year;
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+	
+	public Book(String title, String author, int year) {
+		super();
+		this.title = title;
+		this.author = author;
+		this.year = year;
+	}
+	/*Q) When new Book() is called , will it internally invoke toString() method and return the value? Need to check with team.
+	 * This is done for better readability of code in console. 
+	 * */
+	@Override
+	public String toString() {
+		return "Book [title=" + title + ", author=" + author + ", year=" + year + "]";
+	}
+	
+	/*
+	 * Q) Why do we need to override hashCode() method to remove duplicates like below?
+	 * Book book1 = new Book("Walden", "Henry Thoreau", 1854);
+		Book book2 = new Book("Walden", "Henry Thoreau", 1854);
+	 * A) We know that HashSet is based on HashMap and HashMap is internally based on HashTable. In HashTable, it has a hash function and this
+	 * has function uses a hashCode method in order to hash into the hashTable in order to find the correct bucket number. 
+	 * Now in order to remove duplicate objects(instances of this class) we need to have the same hash code for all the duplicate objects.
+	 * But in this case both of these objects will have a different hash codes. Because hashCode() method is defined in the Object class, so 
+	 * when HashSet invokes hashCode() method in Object class is invoked for the above example, it will return different hash codes. How the 
+	 * hasCode() method is implemented is it returns the memory address of the corresponding object after converting it into an `int` representation.
+	 * So both of them are actually two different objects as both of them have two different memory addresses and because of that we get different values 
+	 * returned by the hashCode() method in Object class. So we need to override it so that for both these instances 
+	 * */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + year;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		if (author == null) {
+			if (other.author != null)
+				return false;
+		} else if (!author.equals(other.author))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (year != other.year)
+			return false;
+		return true;
+	}
+	
+	/*public int hashCode() {
+		return title.hashCode();
+	}
+
+	public boolean equals(Object o) {
+		return (year == (((Book)o).getYear())) && (author.equals((((Book)o).getAuthor())));
+	}*/
+	
+}

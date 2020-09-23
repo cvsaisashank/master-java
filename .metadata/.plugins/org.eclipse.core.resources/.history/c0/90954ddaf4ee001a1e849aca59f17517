@@ -1,0 +1,25 @@
+package com.learning.basics;
+
+public class BasicsDemo {
+    
+    static void stringExamples() {
+      String s = "hello world!";
+      System.out.println("s: " + s);  
+    //   System.out.println("s.length: " + s.length());  
+    //   System.out.println("s.isEmpty: " + s.isEmpty());
+      // Comparison 
+      System.out.println("s.equals: " + s.equals("HELLO WORLD!"));  
+      System.out.println("s.equalsIgnoreCase: " + s.equalsIgnoreCase("HELLO WORLD!"));  
+      System.out.println("s.compareTo: " + s.compareTo("HELLO WORLD!"));  
+      if( x> 10) {
+        System.out.println("s.compareTo: " + s.compareTo("HELLO WORLD!"));  
+      } else {
+          if(x > 20) {
+            System.out.println("s.compareTo: " + s.compareTo("HELLO WORLD!"));  
+          }
+      }
+    }
+    public static void main(String[] args) {
+        stringExamples();
+      } 
+}

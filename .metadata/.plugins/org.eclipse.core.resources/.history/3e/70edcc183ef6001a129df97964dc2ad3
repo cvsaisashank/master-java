@@ -1,0 +1,263 @@
+package com.semanticsquare.io;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Scanner;
+
+public class IODemo {
+	static String inFileStr = "walden.jpg";
+	static String outFileStr = "walden-out.jpg";
+	
+	// By convention, static nested classes should be placed before static methods
+		public static class SerializableDemo implements Serializable {
+			//static final long serialVersionUID = 8882416210786165012L;
+			private String name;
+			public String getName() { return name; }
+			public void setName(String name) { this.name = name; }
+			// transient - telling to not serialize this inst
+			private transient int id = 4;
+			public int getId() { return id; }       	 
+
+		    //private String gender;	  
+		}
+	
+	public static void fileCopyNoBuffer() {
+		System.out.println("\nInside fileCopyNoBuffer ...");
+		
+		long startTime, elapsedTime; // for speed benchmarking
+
+		// creating an instance of class File by passing the file path to get the file length
+		File fileIn = new File(inFileStr);
+		// Print file length
+		System.out.println("File size is " + fileIn.length() + " bytes");
+// Create an instance of fileInputStream and fileOutputStream.
+		try (FileInputStream in = new FileInputStream(inFileStr);
+				FileOutputStream out = new FileOutputStream(outFileStr)) {
+			startTime = System.nanoTime();
+			int byteRead;
+			// Read a raw byte, returns an int of 0 to 255.
+			// Invoke a read method in fileInputStream(in) and return a byte and store in `byteRead`. At the end, if there is nothing to read
+			// it returns -1.
+			while ((byteRead = in.read()) != -1) {
+				// Write the least-significant byte of int, drop the upper 3
+				// bytes
+				out.write(byteRead);
+			}
+			elapsedTime = System.nanoTime() - startTime;
+			System.out.println("Elapsed Time is " + (elapsedTime / 1000000.0) + " msec");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// Most common way to read byte streams from a file. This reads and writes a group of bytes rather
+	// than doing it by a single byte like how the method `fileCopyNoBuffer` does.
+	public static void fileCopyWithBufferAndArray() {
+		System.out.println("\nInside fileCopyWithBufferAndArray ...");
+		
+		long startTime, elapsedTime; // for speed benchmarking
+		startTime = System.nanoTime();
+		// The below coding style is called as a decorator pattern where we are inputing FileInputStream instance to BufferedInputStream.This 
+		// decorator pattern is possible because of these classes extending a common superClass.
+		// This is also called chaining.
+		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(inFileStr));
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFileStr))) {
+			// This variable is used to read or write a group of bytes from input and output stream.. Here, byte array size here is 4000. 
+			// Which means, ,maximum 4000 bytes are used to read or write data streams. 
+			byte[] byteBuf = new byte[4000];
+			int numBytesRead;
+			// Here read method is called which accepts an array as an input. 4000 bytes are read from `in` and stored in `numBytesRead`. If there is nothing to read then read() method will return -1.
+			while ((numBytesRead = in.read(byteBuf)) != -1) {
+				// Invoking the write method on the `BufferedOutputStream`.
+				// We are passing the 1) `byteBuf(byte array size which is having 4000bytes)`,
+				// 2) offset is 0
+				// 3) numBytesRead - number of bytes that has been read which is returned by the read method.
+				out.write(byteBuf, 0, numBytesRead);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		elapsedTime = System.nanoTime() - startTime;
+		System.out.println("fileCopyWithBufferAndArray: " + (elapsedTime / 1000000.0) + " msec");
+	}
+	
+	private static void readFromStandardInput() {
+		System.out.println("\nInside readFromStandardInput ...");
+		String data;
+	
+		System.out.print("Enter \"start\" to continue (Using BufferedReader): ");		
+		/*
+		 * inputs from console are converted to bytes by `System.in` and then convert those bytes to character using `UTF-8` encoding which is done by `InputStreamReader`.
+		 * Then characters are read from BufferReader.
+		 * */
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(System.in, "UTF-8"))){
+			while ((data = in.readLine()) != null && !data.equals("start")) {
+				System.out.print("\nDid not enter \"start\". Try again: ");				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Correct!!");
+	}
+	
+	private static void readFromConsoleUsingScanner() {
+		String data;
+		System.out.print("\nEnter \"start\" to continue (Using java.util.Scanner): ");		
+		Scanner scanner = new Scanner(System.in);
+		
+		while(!(data = scanner.nextLine()).equals("start")) {
+			System.out.print("\nDid not enter \"start\". Try again: ");	
+	    }	
+		System.out.println("Correct!!");
+		
+		
+		System.out.println("Now, enter the start code: ");
+		// nextInt() - converts the string entered in console to an `int`. Simillar to parseInt()
+		int code = scanner.nextInt(); // other methods: nextLong, nextDouble, etc
+		System.out.println("Thanks. You entered code: " + code);
+		scanner.close();
+		
+		
+		/**
+		 * Scanner ~ a text scanner for parsing primitives & string
+		 *         ~ breaks its input into tokens using a delimited pattern (default: whitespace)
+		 *         ~ when System.in is used, internally constructor uses 
+		 *            an InputStreamReader to read from it
+		 *         ~ hasXXX & nextXXX can be used together
+		 *         ~ InputMismatchException is thrown
+		 *         ~ From Java 5 onwards
+		 
+		
+		Scanner s1 = new Scanner("Hello, How are you?");
+		while(s1.hasNext()) {
+			System.out.println(s1.next());
+		}	
+		*/
+	}
+	
+	public static void fileMethodsDemo() {
+		System.out.println("\nInside fileMethodsDemo ...");
+		
+		// File f = new File("C:\\jid\\demo\\src\\..\\walden.jpg"); // "movies\\movies.txt" also works
+		File f = new File("walden.jpg");
+		
+		System.out.println("getAbsolutePath(): " + f.getAbsolutePath()); // /Users/chittoori/Desktop/Projects/jid/demo/walden.jpg
+		try {
+			System.out.println("getCanonicalPath(): " + f.getCanonicalPath());
+			System.out.println("createNewFile(): " + f.createNewFile());
+		} catch (IOException e) {}		
+		System.out.println("separator: " + f.separator); // instead of hardcoding the separator(`/` or `\`), using separator will be dynamic.
+		System.out.println("separatorChar: " + f.separatorChar); // `/`
+		System.out.println("getParent(): " + f.getParent());
+		System.out.println("lastModified(): " + f.lastModified()); // time in milliseconds from epoch time(1970);
+		System.out.println("exists(): " + f.exists());
+		System.out.println("isFile(): " + f.isFile());
+		System.out.println("isDirectory(): " + f.isDirectory());
+		System.out.println("length(): " + f.length());
+		
+//		System.out.println("My working or user directory: " + System.getProperty("user.dir"));
+//		System.out.println("new File(\"testdir\").mkdir(): " + new File("testdir").mkdir()); // not working in Mac
+//		System.out.println("new File(\"testdir\\test\").mkdir(): " + new File("testdir\\test").mkdir());// not working in Mac
+//		System.out.println("new File(\"testdir\").delete(): " + new File("testdir").delete());// not working in Mac
+//		System.out.println("new File(\"testdir\\test1\\test2\").mkdir(): " + new File("testdir\\test1\\test2").mkdir()); // not working in Mac
+//		System.out.println("new File(\"testdir\\test1\\test2\").mkdirs(): " + new File("testdir\\test1\\test2").mkdirs());// not working in Mac
+	
+		// not working in Mac correctly
+		try {
+			File f2 = new File("temp.txt");
+			System.out.println("f2.createNewFile(): " + f2.createNewFile());
+			System.out.println("f2.renameTo(...): " + f2.renameTo(new File("testdir\\temp1.txt"))); // move!!
+		} catch (IOException e) {}
+		
+	}
+	
+	public static void dirFilter(boolean applyFilter) {
+	    System.out.println("\nInside dirFilter ...");
+	    
+	    File path = new File(".");
+		String[] list;
+		
+		if(!applyFilter)
+		    list = path.list();
+		else
+		    list = path.list(new DirFilter());
+		
+		//Arrays.sort(list, String.CASE_INSENSITIVE_ORDER);
+		for(String dirItem : list)
+		    System.out.println(dirItem);
+	}
+	
+	public void doSerialization() {
+		System.out.println("\nInside doSerialization ...");
+		
+	    SerializableDemo serializableDemo = new SerializableDemo();
+		serializableDemo.setName("Java");
+		System.out.println("name (before serialization): " + serializableDemo.getName());
+		System.out.println("id (before serialization): " + serializableDemo.getId());
+		
+		/*
+		 * performing serialization on SerializableDemo object which is serializableDemo and saving it to `serial.ser` file.
+		 * */
+		try (ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("serial.ser")))) {
+			out.writeObject(serializableDemo);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void doDeserialization() {
+		System.out.println("\nInside doDeserialization ...");
+		
+	    try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("serial.ser")))) {
+			SerializableDemo serializedObj = (SerializableDemo) in.readObject();
+			System.out.println("name (after deserialization): " + serializedObj.getName());
+			System.out.println("id (after deserialization): " + serializedObj.getId());
+	    } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void main(String[] args) {
+		
+		// fileCopyNoBuffer(); // byte stream example with no buffering
+		// fileCopyWithBufferAndArray(); // byte stream example with buffering
+		// readFromStandardInput(); // character stream example with console as an input/ source
+		// readFromConsoleUsingScanner();// read input from console using scanner. 
+		// fileMethodsDemo(); // demo on how to use different file methods.
+		// dirFilter(true); // shows how to filter particular files within a directory.
+		
+		// Serialization - // allows us to store java objects to the disk or memory.
+				if (args.length > 0 && args[0].equals("true")) {
+					new IODemo().doSerialization();
+				}
+				new IODemo().doDeserialization();	
+		System.out.println(System.getProperty("file.encoding")); // UTF-8 is the output.
+	}
+}
+
+
+class DirFilter implements FilenameFilter {
+	// Holds filtering criteria for files
+	public boolean accept(File file, String name) {
+		return name.endsWith(".jpg") || name.endsWith(".JPG");
+	}
+}

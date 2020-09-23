@@ -1,0 +1,92 @@
+package com.semanticsquare.collections;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/* Notes:
+ * - hash table and linked list implementation of Map interface
+ * - Preserves insertion order - important
+ * - extends HashMap.
+ * - Permits null values & one null key
+ *  - not synchronized.
+ *  - This is simillar to LinkedHashSet
+ * */
+public class LinkedHashMapDemo {
+	 /*
+	   * Demo: 
+	   * 	1. See output with and without commenting get() calls
+	   *    2. See output when accessOrder=false with get() calls. get calls do not have any influence
+	   *    3. Finally, change object type from LRUCache to LinkedHashMap and see output. 
+	   *       All 5 mappings will be printed as removeEldestEntry would return false by default
+	   */
+	/*
+	 * Q) What is LRU cache?
+	 * A) LRU stands for Least recently used cache. This provides quick access to important data. Impoartant data can be application specific
+	 * like recently used items, frequently used items, most liked or shared data. This kind of data can be stored in RAM instead of hitting the
+	 * database to fetch such kind of data. Mostly recently used item will be placed at the end.
+	 * */
+	  private static void lruCacheTest() {
+		  System.out.println("\n################## Inside lruCacheTest #################################");
+		  /*
+		   * - The constructor we are going to invoke below is LinkedHashMap(capacity, loadFactor, accessOrder)
+		   * 	if accessOrder = false - Then LinkedHashMap will not act as an LRU cache.
+		   * 	if accessOrder = true - Then LinkedHashMap will not behave as an LRU cache.
+		   * - By default LRUCache size is unlimited. To make the size limited then we need to create a new class which extends LinkedHashMap<K,V>
+		   *    an there we can specify the size of the LRU cache as done with LRUCache<K,V> class.
+		   * */
+		  Map<String, String> lruCache = new LRUCache<>(16, 0.75f, true);
+		  lruCache.put("a", "A");
+		  lruCache.put("b", "B");
+		  lruCache.put("c", "C");
+		  System.out.println("lruCache " + lruCache); // Output: {a=A, b=B, c=C}
+		  
+		  lruCache.get("a"); // multiple get("a") will not make any difference
+		  lruCache.get("a");
+		  lruCache.get("a");
+		  /* As `a` is accessed most recently it will be moved to the end like should below in the output */
+		  System.out.println("lruCache after get('a') call " + lruCache); // Output: {b=B, c=C, a=A}
+		  lruCache.get("b");
+		  System.out.println("lruCache after get('b') call " + lruCache);// Output: {c=C, a=A, b=B}
+		  
+		  /*
+		   * As the accessOrder is true, and we limited our cache size to be 3. Now when we put(add) a new element then `removeEldestEntry` 
+		   * will be called and will remove the eldest which `c=C` in this case as you can see in the above output.
+		   * */
+		  lruCache.put("d", "D");
+		  System.out.println("lruCache after get('d') call " + lruCache);// Output: {a=A, b=B, d=D}
+		  lruCache.put("e", "E");
+		  System.out.println("lruCache after get('e') call " + lruCache);	// Output: {b=B, d=D, e=E}  
+	  }
+		
+	public static void main(String[] args) {	
+		lruCacheTest();				
+	}
+	
+}
+
+/*
+ * Creating this class to control the size of the cache which extends LinkedHashMap
+ * */
+class LRUCache<K,V> extends LinkedHashMap<K,V> {
+	//private static final long serialVersionUID = 6464155743798737431L;
+	/* Size of cache is 3 */
+	private static final int MAX_ENTRIES = 3;
+	  
+	public LRUCache(int initialCapacity,
+	             float loadFactor,
+	             boolean accessOrder) {
+		/* Invoking LinkedHashMap constructor */
+		 super(initialCapacity, loadFactor, accessOrder);
+	}
+	  
+	/* Overriding the removeEldestEntry from LinkedHashMap.
+	 * Invoked by put and putAll after inserting a new entry into the map and removes the eldest entry. The eldest entry is nothing but
+		lest recently used 
+		If the removeEldestEntry() return false - then eldest entry should not be removed. This is the default.
+		If the removeEldestEntry() return true - then eldest entry will be removed.
+	*/
+	public boolean removeEldestEntry(Map.Entry eldest) {
+	     return size() > MAX_ENTRIES; // returns true if the cache size is full to remove the `eldest` entry.
+		 // return false; // same as normal linked hash map
+	}		  
+}

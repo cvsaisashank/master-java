@@ -1,0 +1,12 @@
+package com.semanticsquare.exceptions;
+
+// By Extending checked exception we are forced to handle this exception `APIFormatChangeException` in the calling method.
+// This is a custom checked exception created as per Item 58
+public class APIFormatChangeException extends Exception{
+	private	String response;
+	public APIFormatChangeException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+	
+}

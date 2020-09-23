@@ -1,0 +1,44 @@
+package com.semanticsquare.collections;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+/* Notes:
+ * - TreeMap implements NavigableMap interface and NavigableMap extends SortedMap.
+ * - All the methods are similar to TreeSet, just that in TreeSet, the operations are performed on an element whereas in a TreeMap, the 
+ * operations are performed on Keys.
+ * - Sorting is done by natural ordering or by Comparator by the keys.
+ * */
+public class TreeMapDemo {
+	  
+	  private static void treeMapDemo() {
+		System.out.println("\n\n############## Inside treeMapDemo #################");
+		TreeMap<String, Integer> map1 = new TreeMap<>();
+		map1.put("John", 25);
+		map1.put("Raj", 29);
+		map1.put("Anita", 23);
+		
+		System.out.println(map1); // Output: {Anita=23, John=25, Raj=29}
+		
+		System.out.println("#################### Iterating using entrySet ###########################");
+		Set<Map.Entry<String, Integer>> mappings = map1.entrySet();
+		for (Map.Entry<String, Integer> mapping : mappings) {
+			System.out.println("Name: " + mapping.getKey() + ", Age: " + mapping.getValue()); // Output on first iteration: Name: Anita, Age: 23
+			if (mapping.getKey().equals("John"))
+				mapping.setValue(26);	
+		}
+		System.out.println("map after setting the value " + map1); // Output: {Anita=23, John=26, Raj=29}
+		
+		
+		System.out.println("result of map1.floorEntry(\"Raj\") " + map1.floorEntry("Raj")); // Output: Raj=29
+		/*
+		 * Q) Why we cannot call setValue() method on the result of simillar methods like floorEntry()?
+		 * A) Because such methods return an entry but the value that is produced is a snapshot  
+		 * */
+		// map1.floorEntry("Raj").setValue(22);
+	}
+		
+	public static void main(String[] args) {
+		treeMapDemo();
+	}	
+}

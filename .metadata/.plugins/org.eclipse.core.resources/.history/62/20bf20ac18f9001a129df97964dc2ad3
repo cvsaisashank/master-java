@@ -1,0 +1,12 @@
+package com.semanticsquare.collections;
+
+import java.util.List;
+
+public class ListIterator {
+	
+	static void listIteratorDemo() {
+	public static void main(String[] args) {
+			
+		
+	}
+}

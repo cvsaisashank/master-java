@@ -1,0 +1,33 @@
+package com.semanticsquare.collections;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/*Notes
+ * Q) What is LinkedHashSet?
+ * It is hash table & linked list implementation of Set interface. It extends HashSet. It internally uses LinkedHashMap. It permits one null element.
+ * Q) Why we should use LinkedHashSet over HashSet?
+ * A) LinkedHashSet has a doubly linked list running thru its elements. For this reason, it preserves the insertion order.
+ * Q) Which operation is faster than HashSet?
+ * iteration(LinkedHashSet) is faster than 
+ * */
+public class LinkedHashSetDemo {
+	public static void linkedHashSetDemo() {
+		Set<String> hashSet = new HashSet<>();
+		hashSet.add("Raj");
+		hashSet.add("John");
+		hashSet.add("Anita");
+		System.out.println("hashSet: " + hashSet);
+		
+		Set<String> linkedHashSet = new LinkedHashSet<>();
+		linkedHashSet.add("Raj");
+		linkedHashSet.add("John");
+		linkedHashSet.add("Anita");
+		System.out.println("linkedHashSet: " + linkedHashSet);
+	}
+	
+	public static void main(String[] args) {
+		linkedHashSetDemo();
+	}	
+}

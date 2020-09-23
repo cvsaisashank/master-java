@@ -1,0 +1,179 @@
+package com.semanticsquare.collections;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
+
+/* Notes
+ * By default Java implements double linked list. Meaning each element has two links - one to the previous element and one to the next element.
+ * Advantages:
+ * 1.It will allow us to perform operations on both first and last elements of a list.
+ * 2. If we want to look for an element at a particular index, then we would have to traverse thru only half of the list. It will do that by checking
+ * 
+ * */
+public class LinkedListDemo {	
+	/*
+	 * Initial size of ArrayList is 10 and when we append the 11th element it will create a new arrayList and assign 50% of the size.
+	 * */
+	private static List<Integer> arrayListDemo() {
+		// Basic operations
+		System.out.println("########################## Basic Operations ########################################");
+		// Create a linked list.
+		List<Integer> list1 = new LinkedList<>();
+		list1.add(1);
+		list1.add(2);
+		list1.add(3);
+		list1.add(3); // ArrayList can store duplicates
+		list1.add(null); // ArrayList can store null values
+		System.out.println("list1: add() demo " + list1);
+		
+		list1.remove(3); //  removes at a particular index.
+		System.out.println("list1: " + list1);
+		list1.remove(3);
+		System.out.println("list1: remove(3)" + list1);
+		
+		list1.add(0, 10);
+		System.out.println("list1: add 10 at 0th position " + list1);
+		list1.set(0, 9); // sets 9 at 0th position
+		System.out.println("list1: set(0,9)" + list1);
+				
+		// Bulk Operations
+		System.out.println("########################## Bulk Operations ########################################");
+		Collection<Integer> list2 = new ArrayList<>();
+		list2.add(9);
+		list2.add(3);
+		
+		list1.removeAll(list2); // it removes 3,9 from list1
+		System.out.println("list1: " + list1);
+		
+		list2.add(1); // at this point, list 2 has 9,3,1 and list1 has 1,2
+		
+		list1.retainAll(list2); // retains the elements present in list2 and removes the rest from list1.
+		System.out.println("list1: using reatianAll method " + list1);
+		
+		list1.addAll(list2); // add list2 elements to list1
+		System.out.println("list1: " + list1);
+		
+		// set(2,8) -> sets the value 8 at index position 2 and returns the previous value which was at position 2 which is 3, in this case.
+		System.out.println("list1.set(2, 8): " + list1.set(2, 8)); 
+		
+		
+		// Search
+		System.out.println("########################## Search ########################################");
+		System.out.println("list1.contains(1): " + list1.contains(1)); // return boolean if it contains value
+		System.out.println("list1.indexOf(1): " + list1.indexOf(1)); // returns index position of the first occurance
+		System.out.println("list1.lastIndexOf(1): " + list1.lastIndexOf(1)); // returns index position of the first occurance from last	
+		System.out.println("list1: " + list1);
+		
+		
+		// Range-view: subList (new list is backed by original)
+		System.out.println("########################## Range - view ########################################");
+		List<Integer> list3 = list1.subList(2, 3); // element at 2 is inclusive and element at 3 is exclusive so it returns only one element, in this case.
+		System.out.println("list3: " + list3);
+		/* Any changes made to sublist(list3) are also reflected in the main list(list1) and vice versa is also true */
+		list3.set(0, 6);
+		System.out.println("list1: " + list1);
+		list3.add(0, 7);
+		System.out.println("list1: " + list1);
+		list1.set(2, 8);
+		System.out.println("list3: " + list3);
+		/* When we make any structural changes in the original array like adding a element, then when accessing the sublist(list3) 
+		 * will throw an exception called ConcurrentModificationException. But while replacing elements there is no problem. Only when structure
+		 * gets changed then it is an issue.
+		 * To see this in action uncomment the below 2 lines of code.
+		 * */
+		//list1.add(0, 8); 
+		//System.out.println("list3: " + list3);
+		System.out.println("list1: " + list1);
+		/*
+		 * We cannot remove an item or an element from a forEach statement. It will throw an exception `ConcurrentModificationException`.
+		 * If we want to remove an element in a loop then we need to use an Iterator method but not forEach.		
+		 * To view this in action uncomment the below foEach loop
+		 * */
+		/*
+		for (int element : list1) {
+			System.out.println("element: " + element);
+			
+			// Generates ConcurrentModificationException
+			if (element == 9) {
+				list1.remove(Integer.valueOf(element)); // valueOf is used due to its caching
+			}
+		}		
+		*/
+		return list1;
+		
+	}
+	
+	private static void iteratorDemo(List<Integer> list1) {
+		System.out.println("\n#######################Inside iteratorDemo ##########################");
+		
+		// To iterate over the list we need to invoke the method iterator() in ArrayList and it returns an instance of Iterator interface.
+		Iterator<Integer> iterator = list1.iterator();  
+		// Looping an iterator, while loop is more cleaner.
+		// hasNext() method returns either a true or a false.
+		while (iterator.hasNext()) {
+			int element = iterator.next(); // to get the next element.
+			System.out.println("element: " + element);
+			
+			if (element == 9) {
+				/*
+				 *  we don't get the ConcurrentModificationException exception in iterator when we call iterator method.
+				 *  We must invoke the remove method only after `next()` method. No two consecutive remove() methods is possible.
+				 *  Because it will remove the item the next() method initiates.
+				 * */
+				iterator.remove(); 
+				/*
+				 * forEachRemaining - forEach is defined by iterable. But forEachRemaining is defined by Iterator interface.
+				 * Other than element 9, it will invoke the method add in Filter class using method reference syntax(::) for all the elements other than 9.
+				 * */
+				iterator.forEachRemaining(FilterClass::add);	
+			}
+		}
+		System.out.println("list1: after removing element or an item 9 " + list1);
+		
+		/*
+		 * We are invoking forEach method in ArrayList on list1 by passing method reference.
+		 * method reference - System.out::println
+		 * We are passing each element to the method system.out.println
+		 * */
+		list1.forEach(System.out::println);
+		/* 
+		 * Filter is our own custom class here and we invoke filter method in Filter class with that that method reference syntax ::.
+		 * */
+		list1.forEach(FilterClass::filter);
+		/*
+		 * Within forEach of ArrayList, if we pass an instance of a class, that class shd implement Consumer interface which has an 
+		 * accept method or else it will throw an error.
+		 * */
+		list1.forEach(new FilterClass());	// requires implementing Consumer	
+		
+		// forEachRemaining:
+		// http://mail.openjdk.java.net/pipermail/lambda-dev/2013-June/010221.html
+		// A/C Brian Goetz, he doesn't see much use of this method			
+	}
+	
+	public static void main(String[] args) {
+		List<Integer> list1 = arrayListDemo();	
+		iteratorDemo(list1); // demo to show how iterator method works and how to iterate over an array.
+	}
+}
+
+class FilterClass implements Consumer {
+	static void filter(Integer i) {
+		if (i == 1)
+			System.out.println("To demo forEach(Filter::filter) " +  i);
+	}
+	// accept method is Consumer interface implementation.
+	public void accept(Object i) {		
+		if ((int)i == 1)
+			System.out.println("To demo forEach(new Filter) implementation of Consumer " +  i);
+	}
+		
+	static void add(Integer i) {
+		System.out.println("to demo forEachRemaining() method " +  i + 7);
+	}
+		
+}

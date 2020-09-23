@@ -1,0 +1,11 @@
+package com.semanticsquare.collections;
+
+import java.util.List;
+
+public class ListIterator {
+
+	public static void main(String[] args) {
+		List<Integer> list1 = arrayListDemo();	
+		iteratorDemo(list1); // demo to show how iterator method works and how to iterate over an array.
+	}
+}

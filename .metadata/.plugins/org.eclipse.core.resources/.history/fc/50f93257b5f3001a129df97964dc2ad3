@@ -1,0 +1,6 @@
+package com.semanticsquare.exceptions;
+
+// By Extending c
+public class APIFormatChangeException extends Exception{
+
+}

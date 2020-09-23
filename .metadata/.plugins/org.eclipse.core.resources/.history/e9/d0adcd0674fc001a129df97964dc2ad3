@@ -1,0 +1,148 @@
+package com.semanticsquare.collections;
+
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class TreeSetDemo {
+	
+	private static void treeSetDemo() {
+		BookDescription book1 = new BookDescription("Harry Potter", "J.K.Rowling", 1997);
+		BookDescription book2 = new BookDescription("Harry Potter", "J.K.Rowling", 1997); // duplicate
+		BookDescription book3 = new BookDescription("Walden", "Henry David Thoreau", 1854);
+		BookDescription book4 = new BookDescription("Effective Java", "Joshua Bloch", 2008);
+			  
+		Set<BookDescription> books = new TreeSet<>(new TitleComparator());
+		books.add(book1);
+		books.add(book2);
+		books.add(book3);
+		books.add(book4);
+	      
+	    for (BookDescription book : books) {
+	    	System.out.println(book);
+	    }		
+	}
+	
+	public static void main(String[] args) {
+		treeSetDemo();
+	}	
+	
+}
+
+/*
+ * Comparable is considered as Natural ordering from java.lang.Comparable interface
+ * */
+class BookDescription implements Comparable {
+	private String title;
+	private String author;
+	private int year;
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+	
+	public BookDescription(String title, String author, int year) {
+		super();
+		this.title = title;
+		this.author = author;
+		this.year = year;
+	}
+
+	@Override
+	public String toString() {
+		return "BookDescription [title=" + title + ", author=" + author + ", year=" + year + "]";
+	}	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + year;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BookDescription other = (BookDescription) obj;
+		if (author == null) {
+			if (other.author != null)
+				return false;
+		} else if (!author.equals(other.author))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (year != other.year)
+			return false;
+		return true;
+	}
+	
+	/*
+	 * Q) Why we are implementing compareTo method here?
+	 * To sort the objects of this class when using a TreeSet data structure, we need to implement this method or else ClassCastException
+	 * will come.
+	 * Q) When will this method is invoked?
+	 * A) This compareTo method will be invoked on the new element that is going to be added. Simply when we call add() method in TreeSet.
+	 * Q) How the compareTo method works?
+	 * A) Let us assume there is already an element in the TreeSet and we wanted to add a new element. What TreeSet is going to do is,
+	 * TreeSet is going to invoke the compareTo method on the new Element we want to add and it will pass the existing element there in the 
+	 * tree set and then the compareTo() method will say where to place the element. How it will tell is as below:
+	 *  - if it retuns a zero then new element which we are planning to add is a duplicate and hence it will not be added.
+	 *  - if it returns a negative integer which means the new element needs to be placed before the element that is already there. 
+	 *  - if it returns a positive integer which means the new element needs to be placed after the element that is already there. 
+	 *  But if the TreeSet has more than one element then compareTo() method is invoked on each of the elements. 
+	 * 
+	 * Q) What the below method compareTo is doing?
+	 * A) getTitle() - this will return the title of the new element and then we are comparing by calling the compareTo method from String 
+	 * class on the title. The object we are passing to the String compareTo is the input object book. As it is of type Object, we need 
+	 * to downCast it to `BookDescription` and then we are fetching its title(). Then we compare both the titles and sort by title.
+	 * String class also implements Comparable and for this reason we are able to call compareTo on the title which is a string.
+	 * Not only String class but all the Boxed primitives like Integer, etc implements Comparable
+	 * Q) WHy it is called Natural ordering?
+	 * A) Because the elements(keys) themselves are saying how they have to be sorted.
+	 * */
+	public int compareTo(Object book) {
+		 return getTitle().compareTo(((BookDescription)book).getTitle()); // utilizing Strings compareTo
+	}
+}
+
+
+class TitleComparator implements Comparator {
+	System.out.println(book);
+	@Override
+	public int compare(Object o1, Object o2) {
+		// TODO Auto-generated method stub
+		return ((BookDescription)o1).getTitle().compareTo(((BookDescription)o2).getTitle());
+	}
+	
+}
