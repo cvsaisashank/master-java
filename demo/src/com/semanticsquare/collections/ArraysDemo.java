@@ -21,7 +21,7 @@ public class ArraysDemo {
 		/* Below will return a String representation of the elements by concatenating all of the elements with a `,`and enclose it with []*/
 		System.out.println("strArray: " + Arrays.toString(strArray)); // Output: [Raj, Anita]
 		/* asList:
-		 * Q) WHat asList() does?
+		 * Q) What asList() does?
 		 * A) It takes an input array and it returns a List view of the array. 
 		 * But the thing here is this new ArrayList created will be of fixed size. Meaning we cannot add() or remove() an element.
 		 * asList() is most commonly used method.signature of asList will be something like List<T> asList(T...)

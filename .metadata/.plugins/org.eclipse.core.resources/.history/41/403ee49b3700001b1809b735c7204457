@@ -1,0 +1,60 @@
+package com.semanticsquare.generics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+
+public class BoundedTypeGenericsDemo {
+	
+	public static void main(String[] args) {		
+		Container<String> stringStore = new Store<>();
+		stringStore.set("java");
+		// stringStore.set(1); // This will throw exception as stringStore accepts only String data type
+		System.out.println(stringStore.get()); // Output: Java
+		
+		Container<Integer> integerStore = new Store<>();
+		integerStore.set(1);
+		System.out.println(integerStore.get()); // Output: 1
+		
+		Container<List<Integer>> listStore = new Store<>();
+		listStore.set(Arrays.asList(1, 2, 3));
+		System.out.println(listStore.get()); // Output: [1, 2, 3]
+		
+		/* We cannot pass primitives as generic types like below*/
+		//Container<int> intStore = new Store<>();
+		
+		/*We can pass SubTYpes or SubCLasses for a generic type like below.*/
+		List<Number> list = new ArrayList<>();
+		list.add(new Integer(1));
+		list.add(new Double(22.0));
+		//list.add(new String("22.0"));
+		System.out.println(list); // Output: [1, 22.0]
+		
+		/* For arrays, type safety is enforced during run time but not at compile time like below. The above example shows that type safety 
+		 * is enforced at compile time for primitives but for arrays like below type safety is enforced at run time. Exception is thrown at run
+		 * time but no exception is shown at compile time.
+		 * */
+		List[] array = new ArrayList[2];
+		array[0] = new ArrayList();
+		array[1] = new LinkedList();
+	}
+}
+
+interface Container<T> {
+	void set(T a);
+	T get();
+}
+
+class Store1<T> implements Container1<T> {
+	private T a;
+	
+	public void set(T a) {
+		this.a = a;
+	}
+	
+	public T get() {
+		return a;
+	}	
+}

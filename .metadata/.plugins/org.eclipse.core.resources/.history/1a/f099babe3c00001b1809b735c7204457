@@ -1,0 +1,51 @@
+package com.semanticsquare.generics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public class RawTypeDemo{
+	
+	public static void main(String[] args) {
+		// Raw type demo:		
+		rawTypeTest();		
+		
+		List<String> strList1 = Arrays.asList("a", "b", "c");
+		List<String> strList2 = Arrays.asList("b", "c", "d");
+		// getCommonElementsCount(strList1, strList2);		
+		
+	}
+	
+	
+	public static int getCommonElementsCount(List list1, List list2) {
+		int count = 0;
+		for (Object element : list1) {
+			if (list2.contains(element)) {
+				count++;
+			}
+		}
+		System.out.println("Common elements count: " + count);
+		return count;
+	}
+	
+	public static void rawTypeTest() {
+		System.out.println("\n\nInside rawTypeTest ...");
+		int ISBN = 1505297729;
+	    List<Double> prices = new ArrayList<>();
+	    
+	    HalfIntegrator.getPrice(ISBN, prices);
+	    Double price = prices.get(0);
+	}
+	
+}
+
+class HalfIntegrator {
+	/* Here we are using a raw type List and we are passing List<double> to it and the method is adding an int type to its List. As we are 
+	 * using the raw type here compiler is not catch
+	 * */
+	public static void getPrice(int ISBN, List<Double> prices) {
+		prices.add(45);
+	}
+	
+}

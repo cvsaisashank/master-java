@@ -32,7 +32,7 @@ public class IODemo {
 			private String name;
 			public String getName() { return name; }
 			public void setName(String name) { this.name = name; }
-			// transient - telling to not serialize this instance variable. When we deserialize we will get the default value based on the type for the variable.
+			// transient - telling to not serialize this instance variable. When we deserialize, we will get the default value based on the type for the variable.
 			private transient int id = 4;
 			public int getId() { return id; } 
 
@@ -80,11 +80,12 @@ public class IODemo {
 		// This is also called chaining.
 		try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(inFileStr));
 				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outFileStr))) {
-			// This variable is used to read or write a group of bytes from input and output stream.. Here, byte array size here is 4000. 
+			// This variable is used to read or write a group of bytes from input and output stream. Here, byte array size here is 4000. 
 			// Which means, ,maximum 4000 bytes are used to read or write data streams. 
 			byte[] byteBuf = new byte[4000];
 			int numBytesRead;
-			// Here read method is called which accepts an array as an input. 4000 bytes are read from `in` and stored in `numBytesRead`. If there is nothing to read then read() method will return -1.
+			// Here read method is called which accepts an array as an input. 4000 bytes are read from `in` and stored in `numBytesRead`. 
+			// If there is nothing to read then read() method will return -1.
 			while ((numBytesRead = in.read(byteBuf)) != -1) {
 				// Invoking the write method on the `BufferedOutputStream`.
 				// We are passing the 1) `byteBuf(byte array size which is having 4000bytes)`,

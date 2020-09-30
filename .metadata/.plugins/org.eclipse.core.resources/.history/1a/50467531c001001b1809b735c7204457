@@ -1,0 +1,45 @@
+package com.semanticsquare.generics;
+
+import java.util.List;
+
+/* Notes:
+ * Q) Are generics invariant?
+ * A) Yes. Generics promise is to ensure compile time safety. Invariance also ensure compile time safety. 
+ * Q) Give an example to describe how invariance property is applied on Generics?
+ * A) Let us consider, a Book is a sub type of Bookmark. Because of Invariance, List<Book> is not a sub type of List<Bookmark>. This is done 
+ * to ensure compile time type safety. However for the same type argument, inheritance of Generic types will be good. Meaning, ArrayList<Bookmark> can 
+ * be assigned to List<Bookmark> as ArrayList is a sub type of List.
+ * Q) Are Arrays covariant and what does that mean?
+ * A) Yes. If Book is a sub type of Bookmark then we can assign Book[] to Bookmark[] like below:
+ *    Bookmark[] items = new Book[1];
+ * Q) Should we prefer lists to arrays and why?
+ * A) Yes and as per Item 25 we should prefer lists to arrays.
+ *    Because as Arrays are covariant, they throw exceptions at run time and are not caught at compile time. As List are geenrics and generics are
+ *    invariant, they catch exceptions at compile time which is preferred.
+ * */
+public class InvarianceCovarianceDemo{
+	
+	public static void main(String[] args) {
+		/* Invariance example:
+		 * We are passing an ArrayList<Integer> to List<Number> . We know Integer is a sub type of Number but ArrayList<Integer> is not a 
+		 * Sub type of List<Number>  because of Invariance so get a compilation error if we uncomment the below line.
+		 * */
+		// go(new ArrayList<Integer>());
+		
+		/* Covariance example:
+		 * We know Integer is a sub type of Number and because of co-variance Integer[] is also a sub type of Number[].
+		 * In the below example we are passing an array of Integers to the `go` method but within the `go` method we are assigning a Double value.
+		 *  There is no compilation error because Arrays are covariant by nature and do not throw an exception at compile time but throw an
+		 *  exception at run time.
+		 * */
+		go(new Integer[1]);
+	}
+	
+	// Invariance
+	static void go(List<Number> list) {}
+	
+	// Covariance
+	static void go(Number[] list) {
+		list[0] = 24.4;
+	}	
+}

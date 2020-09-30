@@ -1,0 +1,88 @@
+package com.semanticsquare.generics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+/* Notes: 
+ * - We cannot invoke methods that use class-level type parameters with any arguments except null - demo of this is there in invalidAggregate function
+ * Q) Why not using something like Store<Object> instead of Store<?> ?
+ * A) The limitation with using Object as a type argument is because of invariance. 
+ * 
+ * */
+public class UnboundWildcard{
+	
+	public static void main(String[] args) {
+		ArrayList<?> test = new ArrayList();
+		test.add(10);
+		test.add("name");
+		System.out.println("test " + test);
+		
+		
+		Container1<String> stringStore = new Store1<String>();
+		stringStore.set("java");
+		
+		List<String> strList1 = Arrays.asList("a", "b", "c");
+		List<String> strList2 = Arrays.asList("b", "c", "d");
+		//getCommonElementsCount(strList1, strList2);
+		
+		/* Below is an example using unbound wild card while above method is an example using raw type*/
+		getCommonElementsCountWithWildcard(strList1, strList2);
+		
+		/* below is a second example of using a unbound wildcard*/
+		Container1<?> someStore = stringStore;
+		Object object = someStore.get(); // As the Container1 is of some type we can only assign it to an Object
+		System.out.println("Stored element: " + object);	
+		
+		List<Integer> intList1 = Arrays.asList(1, 2);
+		List<Integer> intList2 = Arrays.asList(3, 4);
+		invalidAggregate(intList1, intList2, new ArrayList());
+	}
+	
+	public static void invalidAggregate(List<?> l1, List<?> l2, List<?> l3) {
+		/*We cannot invoke methods that use class-level type parameters with any arguments except null*/
+		//l3.addAll(null); // null ok 
+		/*we can call methods like l3.contains() but not l3.addAll() when using unbound wild cards. If we want to use addAll() we can only call them using null.*/
+		//l3.addAll(l2);
+	}
+	
+	public static int getCommonElementsCountWithWildcard(List<?> list1, List<?> list2) {
+		int count = 0;
+		for (Object element : list1) {
+			if (list2.contains(element)) {
+				count++;
+			}
+		}
+		System.out.println("Common elements count: " + count);
+		return count;
+	}
+	
+	public static int getCommonElementsCount(List list1, List list2) {
+		int count = 0;
+		for (Object element : list1) {
+			if (list2.contains(element)) {
+				count++;
+			}
+		}
+		System.out.println("Common elements count: " + count);
+		return count;
+	}
+}
+
+interface Container1<T> {
+	void set(T a);
+	T get();
+}
+
+class Store1<T> implements Container1<T> {
+	private T a;
+	
+	public void set(T a) {
+		this.a = a;
+	}
+	
+	public T get() {
+		return a;
+	}
+}

@@ -1,0 +1,25 @@
+package com.semanticsquare.generics;
+
+import java.util.List;
+
+/* Notes:
+ * Q) Are generics invariant?
+ * A) Yes. Generics promise is to ensure compile time safety. Invariance also ensure compile time safety. 
+ * Q) Give an example to describe how invariance property is applied on Generics?
+ * A) Let us consider, a Book is a 
+ * */
+public class InvarianceCovarianceDemo{
+	
+	public static void main(String[] args) {
+		//go(new ArrayList<Integer>());
+		//go(new Integer[1]);
+	}
+	
+	// Invariance
+	static void go(List<Number> list) {}
+	
+	// Covariance
+	static void go(Number[] list) {
+		list[0] = 24.4;
+	}	
+}

@@ -1,0 +1,35 @@
+package com.semanticsquare.generics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+/* Notes:
+ * 
+ * */
+public class BoundedTypeGenericsDemo <T extends List> {
+	
+	public static void main(String[] args) {
+		/* All below are valid bound type examples*/
+		BoundedTypeGenericsDemo<List> list1 = new BoundedTypeGenericsDemo<>(); // 
+		BoundedTypeGenericsDemo<ArrayList> list2 = new BoundedTypeGenericsDemo<>(); // We can pass SubType of of our bound
+	}
+}
+
+interface Container1<T> {
+	void set(T a);
+	T get();
+}
+
+class Store1<T> implements Container1<T> {
+	private T a;
+	
+	public void set(T a) {
+		this.a = a;
+	}
+	
+	public T get() {
+		return a;
+	}	
+}

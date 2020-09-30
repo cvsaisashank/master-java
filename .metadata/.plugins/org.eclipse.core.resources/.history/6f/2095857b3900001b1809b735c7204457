@@ -1,0 +1,21 @@
+package com.semanticsquare.generics;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+/* Notes:
+ * Q) WHat are the important points to be noted when using Bounded type paramsmeters?
+ * A) 1. Can access methods defined by bounds.
+ * 2. Valid bounds are Class, Interface, enum and Parameterized type.
+ * 3. Invalid Bounds are 
+ * */
+public class BoundedTypeGenericsDemo <T extends List> {
+	
+	public static void main(String[] args) {
+		/* All below are valid bound type examples*/
+		BoundedTypeGenericsDemo<List> list1 = new BoundedTypeGenericsDemo<>(); // 
+		BoundedTypeGenericsDemo<ArrayList> list2 = new BoundedTypeGenericsDemo<>(); // We can pass SubType of of our bound
+	}
+}
