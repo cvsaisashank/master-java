@@ -19,6 +19,7 @@ import java.util.List;
  * */
 
 public class GenericsClassesDemo {
+	
 	public static void main(String[] args) {		
 		Container<String> stringStore = new Store<>();
 		stringStore.set("java");
