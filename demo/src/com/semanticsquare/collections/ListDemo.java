@@ -52,14 +52,12 @@ public class ListDemo {
 		// set(2,8) -> sets the value 8 at index position 2 and returns the previous value which was at position 2 which is 3, in this case.
 		System.out.println("list1.set(2, 8): " + list1.set(2, 8)); 
 		
-		
 		// Search
 		System.out.println("########################## Search ########################################");
 		System.out.println("list1.contains(1): " + list1.contains(1)); // return boolean if it contains value
 		System.out.println("list1.indexOf(1): " + list1.indexOf(1)); // returns index position of the first occurance
 		System.out.println("list1.lastIndexOf(1): " + list1.lastIndexOf(1)); // returns index position of the first occurance from last	
 		System.out.println("list1: " + list1);
-		
 		
 		// Range-view: subList (new list is backed by original)
 		System.out.println("########################## Range - view ########################################");

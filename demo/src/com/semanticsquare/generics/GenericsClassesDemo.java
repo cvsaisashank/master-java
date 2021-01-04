@@ -17,7 +17,7 @@ import java.util.List;
  *    3. Arrays dont go well with Generics so dont use with Arrays.
  *    4. Cannot overload methods that have same signature after type erasure.
  * */
-
+ 
 public class GenericsClassesDemo {
 	public static void main(String[] args) {		
 		Container<String> stringStore = new Store<>();
